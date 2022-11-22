@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/base64"
 	"log"
+	"os"
 
 	"github.com/bingoohuang/jiami"
 	"github.com/spf13/pflag"
@@ -22,6 +23,10 @@ func main() {
 	encoded := &jiami.Encoded{}
 	if err := msgpack.Unmarshal(d, encoded); err != nil {
 		log.Fatalf("msgpack.Unmarshal failed: %v", err)
+	}
+
+	if *passphrase == "" {
+		*passphrase = os.Getenv("PASSPHRASE")
 	}
 
 	key := &jiami.Key{Passphrase: []byte(*passphrase), Salt: encoded.Salt}
