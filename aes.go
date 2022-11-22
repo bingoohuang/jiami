@@ -1,4 +1,4 @@
-package aes
+package jiami
 
 import (
 	"crypto/aes"
@@ -54,7 +54,11 @@ func (k *Key) Init() error {
 	return nil
 }
 
-func Encrypt(key *Key, in *Plain) (*Encoded, error) {
+type AesGcm struct{}
+
+func NewAesGcm() *AesGcm { return &AesGcm{} }
+
+func (*AesGcm) Encrypt(key *Key, in *Plain) (*Encoded, error) {
 	out := &Encoded{Salt: key.Salt}
 
 	if len(in.IV) == 0 {
@@ -78,7 +82,7 @@ func Encrypt(key *Key, in *Plain) (*Encoded, error) {
 	return out, nil
 }
 
-func Decrypt(key *Key, en *Encoded) ([]byte, error) {
+func (*AesGcm) Decrypt(key *Key, en *Encoded) ([]byte, error) {
 	b, err := aes.NewCipher(key.Key)
 	if err != nil {
 		return nil, fmt.Errorf("aes NewCipher failed: %w", err)

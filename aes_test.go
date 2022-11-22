@@ -1,4 +1,4 @@
-package aes
+package jiami
 
 import (
 	"testing"
@@ -19,9 +19,10 @@ func TestAES(t *testing.T) {
 	err := k.Init()
 	assert.Nil(t, err)
 
-	encoded, err := Encrypt(k, &plain)
+	g := NewAesGcm()
+	encoded, err := g.Encrypt(k, &plain)
 	assert.Nil(t, err)
-	data, err := Decrypt(k, encoded)
+	data, err := g.Decrypt(k, encoded)
 	assert.Nil(t, err)
 	assert.Equal(t, plain.Data, data)
 }
